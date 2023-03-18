@@ -87,6 +87,11 @@ app.delete('/campgrounds/:id', catchAsync(async (req, res) => {
     res.redirect('/campgrounds');
 })) 
 
+//Creating review system
+app.post('/campgrounds/:id/reviews' , catchAsync(async(req,res,next)=>{
+    res.send('It worked!!')
+}))
+
 //Error handeling of express
 app.all('*',(req,res,next)=>{
     next(new ExpressError('Page not Found' ,404))
