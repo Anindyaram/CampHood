@@ -78,7 +78,6 @@ app.post('/campgrounds' , validateCampground ,catchAsync(async (req,res,next)=>{
 //showing the camp details
 app.get('/campgrounds/:id', catchAsync(async(req,res)=>{
     const campgrounds = await Campground.findById(req.params.id).populate('reviews');
-    console.log(campgrounds);
     res.render('campgrounds/show' , {campgrounds});
 }))
 //editing
@@ -100,13 +99,20 @@ app.delete('/campgrounds/:id', catchAsync(async (req, res) => {
 })) 
 
 //Creating review system
-app.post('/campgrounds/:id/reviews' ,validateReview, catchAsync(async(req,res,next)=>{
+app.post('/campgrounds/:id/reviews' ,validateReview, catchAsync(async(req,res)=>{
     const campground = await Campground.findById(req.params.id);
     const review = new Review(req.body.review);
     campground.reviews.push(review);
     await review.save();
     await campground.save();
     res.redirect(`/campgrounds/${campground._id}`);
+}))
+
+app.delete('/campgrounds/:id/reviews/:reviewId' , catchAsync(async(req,res)=>{
+    const {id,reviewId} = req.params;
+    await Campground.findByIdAndUpdate(id , {$pull:{reviews:reviewId}});
+    await Review.findByIdAndDelete(reviewId);
+    res.redirect(`/campgrounds/${id}`);
 }))
 
 //Error handeling of express
