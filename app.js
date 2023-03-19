@@ -8,6 +8,8 @@ const ExpressError = require('./utils/ExpressError');
 const { campgroundSchema ,reviewSchema} = require('./schemas.js');
 const Review = require('./models/review')
 
+const campgrounds = require('./routes/campgrounds')
+
 const mongoose = require('mongoose');
 const { validate } = require('./models/campground');
 mongoose.set('strictQuery', false);
@@ -47,56 +49,13 @@ const validateReview = (req,res,next)=>{
         next();
     }
 }
-
+//campground Routes
+app.use('/campgrounds' , campgrounds);
 
 app.get('/',(req ,res)=>{
     res.render('home')
 })
 
-app.get('/makecampground',catchAsync(async (req ,res)=>{
-    const camp = new Campground({title:'My Backyard' ,description:'This is a campground' ,price:'20'})
-    await camp.save();
-    res.send(camp)
-}));
-
-app.get('/campgrounds' ,catchAsync(async(req ,res)=>{
-    const campgrounds = await Campground.find({});
-    res.render('campgrounds/index' , {campgrounds});
-}))
-//Adding new campground
-app.get('/campgrounds/new',catchAsync(async (req,res)=>{
-    res.render('campgrounds/new');
-}))
-app.post('/campgrounds' , validateCampground ,catchAsync(async (req,res,next)=>{
-    // if(!req.body.campground) throw new ExpressError('Invalid Campground Data',400);
-
-        const campground = new Campground(req.body.campground);
-        await campground.save();
-        res.redirect(`/campgrounds/${campground._id}`);
-}))
-
-//showing the camp details
-app.get('/campgrounds/:id', catchAsync(async(req,res)=>{
-    const campgrounds = await Campground.findById(req.params.id).populate('reviews');
-    res.render('campgrounds/show' , {campgrounds});
-}))
-//editing
-app.get('/campgrounds/:id/edit', catchAsync(async(req,res)=>{
-    const campground = await Campground.findById(req.params.id);
-    res.render('campgrounds/edit' ,{campground});
-}))
-
-app.put('/campgrounds/:id',validateCampground , catchAsync(async (req, res) => {
-    const { id } = req.params;
-    const campground = await Campground.findByIdAndUpdate(id, { ...req.body.campground });
-    res.redirect(`/campgrounds/${campground._id}`)
-}));
-
-app.delete('/campgrounds/:id', catchAsync(async (req, res) => {
-    const { id } = req.params;
-    await Campground.findByIdAndDelete(id);
-    res.redirect('/campgrounds');
-})) 
 
 //Creating review system
 app.post('/campgrounds/:id/reviews' ,validateReview, catchAsync(async(req,res)=>{
