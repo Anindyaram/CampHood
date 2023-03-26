@@ -23,6 +23,10 @@ router.get('/' ,catchAsync(async(req ,res)=>{
 }))
 //Adding new campground
 router.get('/new',catchAsync(async (req,res)=>{
+    if(!req.isAuthenticated()){
+        req.flash('error' , 'You must be signed in');
+        res.redirect('/login');
+    }
     res.render('campgrounds/new');
 }))
 router.post('/' , validateCampground ,catchAsync(async (req,res,next)=>{
