@@ -4,6 +4,7 @@ const catchAsync = require('../utils/catchAsync');
 const { campgroundSchema} = require('../schemas.js');
 const ExpressError = require('../utils/ExpressError');
 const Campground = require('../models/campground');
+const { isLoggedIn } = require('../middleware');
 
 //Server side validation with the help of joi 
 const validateCampground = (req,res,next)=>{
@@ -22,11 +23,8 @@ router.get('/' ,catchAsync(async(req ,res)=>{
     res.render('campgrounds/index' , {campgrounds});
 }))
 //Adding new campground
-router.get('/new',catchAsync(async (req,res)=>{
-    if(!req.isAuthenticated()){
-        req.flash('error' , 'You must be signed in');
-        res.redirect('/login');
-    }
+router.get('/new', isLoggedIn,catchAsync(async (req,res)=>{
+    
     res.render('campgrounds/new');
 }))
 router.post('/' , validateCampground ,catchAsync(async (req,res,next)=>{
