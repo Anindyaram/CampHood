@@ -5,15 +5,16 @@ const User = require('../models/user');
 const passport = require('passport');
 const users = require('../controllers/users');
 
-//Redirecting to register form 
-router.get('/register' , users.renderRegister);
-//registering new user
-router.post('/register' ,catchAsync(users.register))
-//login 
-router.get('/login' ,users.renderLogin)
-//passport.authenticate() is a middleware by passport which  can be used for various login type
-router.post('/login' ,passport.authenticate('local' ,{failureFlash:true , failureRedirect:'/login'}),users.login)
-//logout from the website
-router.get('/logout',users.logout)
+router.route('/register')
+    .get(users.renderRegister)//Redirecting to register form 
+    .post(catchAsync(users.register))//registering new user
+
+router.route('/login')
+    .get(users.renderLogin)//login 
+    .post(passport.authenticate('local' ,//authenticate is a middleware by passport which can be used for various login type
+    {failureFlash:true ,failureRedirect:'/login'}),
+    users.login)
+
+router.get('/logout',users.logout)//logout from the website
 
 module.exports = router;
