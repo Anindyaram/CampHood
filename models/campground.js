@@ -12,32 +12,43 @@ ImageSchema.virtual('thumbnail').get(function () {
 });
 
 const CampGrounds = new Schema({
-    title:String,
-    images:[ImageSchema],
-    price:Number,
-    description:String,
-    location:String,
-    author:{
-        type:Schema.Types.ObjectId,
-        ref:'User'
+    title: String,
+    images: [ImageSchema],
+    geometry: {
+        type: {
+            type: 'String',
+            enum: ['Point'],
+            required: true
+        },
+        coordinates: {
+            type:[Number],
+            required:true
+        },
     },
-    reviews:[
+    price: Number,
+    description: String,
+    location: String,
+    author: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    reviews: [
         {
-            type:Schema.Types.ObjectId,
-            ref:'Review'
+            type: Schema.Types.ObjectId,
+            ref: 'Review'
         }
     ]
 });
 
 // Deleting all reviews of the campground as it is deleted
-CampGrounds.post('findOneAndDelete' , async function(doc){
-    if(doc){
+CampGrounds.post('findOneAndDelete', async function (doc) {
+    if (doc) {
         await Review.remove({
-            _id:{
-                $in:doc.reviews
+            _id: {
+                $in: doc.reviews
             }
         })
     }
 })
 
-module.exports = mongoose.model('Campground' , CampGrounds)
+module.exports = mongoose.model('Campground', CampGrounds)
