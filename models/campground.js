@@ -11,6 +11,8 @@ ImageSchema.virtual('thumbnail').get(function () {
     return this.url.replace('/upload', '/upload/w_200');
 });
 
+const opts = { toJSON:{virtuals:true}};
+
 const CampGrounds = new Schema({
     title: String,
     images: [ImageSchema],
@@ -38,6 +40,13 @@ const CampGrounds = new Schema({
             ref: 'Review'
         }
     ]
+},opts);
+
+//
+CampGrounds.virtual('properties.popUpMarkUp').get(function () {
+    return `
+    <strong><a href="/campgrounds/${this._id}">${this.title}</a></strong>
+    <p>${this.description.substring(0,20)}</p>`
 });
 
 // Deleting all reviews of the campground as it is deleted
