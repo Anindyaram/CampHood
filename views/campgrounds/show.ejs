@@ -12,13 +12,13 @@
 
             </div>
             <% if(campground.images.length > 1) {%>
-            <a class="carousel-control-prev" href="#campgroundCarousel" role="button" data-slide="prev">
+            <a class="carousel-control-prev" href="#campgroundCarousel" role="button" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
+                <span class="sr-only"></span>
             </a>
-            <a class="carousel-control-next" href="#campgroundCarousel" role="button" data-slide="next">
+            <a class="carousel-control-next" href="#campgroundCarousel" role="button" data-bs-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
+                <span class="sr-only"></span>
             </a>
             <% } %>
         </div>
@@ -48,7 +48,7 @@
 
     </div>
     <div class="col-6">
-        <div id='map' style='width: 100%; height: 300px;'></div>
+        <div id='map'></div>
 
         <% if(currentUser){ %>
         <h2>Leave a Review</h2>

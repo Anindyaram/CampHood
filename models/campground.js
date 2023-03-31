@@ -46,7 +46,7 @@ const CampGrounds = new Schema({
 CampGrounds.virtual('properties.popUpMarkUp').get(function () {
     return `
     <strong><a href="/campgrounds/${this._id}">${this.title}</a></strong>
-    <p>${this.description.substring(0,20)}</p>`
+    <p>${this.description}</p>`
 });
 
 // Deleting all reviews of the campground as it is deleted
